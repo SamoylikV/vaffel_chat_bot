@@ -1,7 +1,9 @@
 import asyncio
 import json
+import logging
 import os
 import re
+import sys
 from datetime import datetime
 
 import pytz
@@ -11,6 +13,8 @@ from dotenv import load_dotenv
 from rapidfuzz import process, fuzz
 
 load_dotenv()
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', stream=sys.stdout)
 
 TOKEN = os.getenv('TOKEN')
 CITIES_FILE = "cities_timezones.json"
@@ -99,11 +103,11 @@ async def handle_message(message: Message):
     now = datetime.now(pytz.timezone(tz))
     working = is_working_time(tz)
 
-    print(f"Chat: {message.chat.title}")
-    print(f"Timezone: {tz}")
-    print(f"Local time: {now}")
-    print(f"Working time: {working}")
-    print("-" * 50)
+    logging.info(f"Chat: {message.chat.title}")
+    logging.info(f"Timezone: {tz}")
+    logging.info(f"Local time: {now}")
+    logging.info(f"Working time: {working}")
+    logging.info("-" * 50)
 
     if not working:
         await message.reply(
@@ -115,7 +119,7 @@ async def handle_message(message: Message):
 
 
 async def main():
-    print("Bot started...")
+    logging.info("Bot started...")
     await dp.start_polling(bot)
 
 
